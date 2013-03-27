@@ -38,7 +38,7 @@ public class TeamTest {
 	}
 
 	@Before
-	public void init() {
+	public void setUp() {
 		sessionFactory = new Configuration().configure().buildSessionFactory();
 		session = sessionFactory.openSession();
 		tx = session.beginTransaction();
@@ -52,7 +52,7 @@ public class TeamTest {
 	}
 
 	@After
-	public void finish() {
+	public void setDown() {
 		tx.commit();
 		session.close();
 		sessionFactory.close();
