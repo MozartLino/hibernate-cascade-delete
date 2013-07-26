@@ -6,19 +6,16 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import br.com.lino.util.HibernateUtil;
 
 @SuppressWarnings("unchecked")
 public class TeamTest {
 
 	public Session session;
-	private SessionFactory sessionFactory;
-	private Transaction tx;
 
 	@Test
 	public void shouldRemovedAllEntityWithObjectDetached() {
@@ -39,11 +36,8 @@ public class TeamTest {
 
 	@Before
 	public void setUp() {
-		sessionFactory = new Configuration().configure().buildSessionFactory();
-		session = sessionFactory.openSession();
-		tx = session.beginTransaction();
-
-		truncateTables();
+		session = HibernateUtil.getCurrentSession();
+		HibernateUtil.beginTransaction();
 
 		Team team = new Team("Team", Arrays.asList(new Person("Person One"), new Person("Person Two")));
 		session.save(team);
@@ -53,17 +47,8 @@ public class TeamTest {
 
 	@After
 	public void setDown() {
-		tx.commit();
-		session.close();
-		sessionFactory.close();
-	}
-
-	private void truncateTables() {
-		session.createSQLQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();
-		session.createSQLQuery("truncate table Team_Person").executeUpdate();
-		session.createSQLQuery("truncate table Team").executeUpdate();
-		session.createSQLQuery("truncate table Person").executeUpdate();
-		session.createSQLQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();
+		HibernateUtil.rollbackTransaction();
+		HibernateUtil.closeSession();
 	}
 
 }
