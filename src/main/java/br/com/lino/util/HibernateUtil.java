@@ -25,6 +25,10 @@ public class HibernateUtil {
 		tx.rollback();
 	}
 
+	public static void commit() {
+		tx.commit();
+	}
+
 	public static void closeSession() {
 		session.close();
 	}
