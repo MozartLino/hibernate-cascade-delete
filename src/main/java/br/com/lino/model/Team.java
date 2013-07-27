@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Cascade;
@@ -19,7 +18,6 @@ public class Team {
 	private String name;
 
 	@OneToMany
-	@JoinColumn(name = "team_id")
 	@Cascade(CascadeType.ALL)
 	private List<Person> people;
 

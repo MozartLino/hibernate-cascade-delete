@@ -14,8 +14,9 @@ public class TeamDAO {
 
 	private SessionFactory factory;
 
-	public TeamDAO(){}
-	
+	public TeamDAO() {
+	}
+
 	@Autowired
 	public TeamDAO(SessionFactory factory) {
 		this.factory = factory;
@@ -31,6 +32,15 @@ public class TeamDAO {
 
 	public Session getSession() {
 		return factory.getCurrentSession();
+	}
+
+	public void save(Team team) {
+		getSession().save(team);
+	}
+
+	public void clear() {
+		getSession().flush();
+		getSession().clear();
 	}
 
 }

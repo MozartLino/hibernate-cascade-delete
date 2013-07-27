@@ -4,20 +4,22 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
-import org.hibernate.Session;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.lino.model.Person;
 import br.com.lino.model.Team;
-import br.com.lino.util.HibernateUtil;
 
 @ContextConfiguration({ "/applicationContext.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
+@Transactional
+@TransactionConfiguration(defaultRollback = true)
 public class TeamDAOTest {
 
 	@Autowired
@@ -42,12 +44,8 @@ public class TeamDAOTest {
 
 	@Before
 	public void setUp() {
-		Session session = HibernateUtil.getCurrentSession();
-		HibernateUtil.beginTransaction();
-		session.save(new Team(1L, "Team", Arrays.asList(
-				new Person("Person One"), new Person("Person Two"))));
-		HibernateUtil.commit();
-		HibernateUtil.closeSession();
+		teamDAO.save(new Team(1L, "Team", Arrays.asList(new Person("Person One"), new Person("Person Two"))));
+		teamDAO.clear();
 	}
 
 }
